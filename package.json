@@ -1,0 +1,38 @@
+{
+  "name": "story-line",
+  "version": "0.1.0",
+  "description": "a simple story line based on react, typescript and d3",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "set NODE_ENV=production&& webpack",
+    "tslint": "tslint -c tslint.json src/**/*.{ts,tsx}",
+    "lint-fix": "eslint --fix app --ext .js,jsx"
+  },
+  "author": "mwindson",
+  "license": "GPL",
+  "dependencies": {
+    "@types/d3": "^4.11.0",
+    "@types/node": "^8.0.41",
+    "@types/react": "^16.0.5",
+    "@types/react-dom": "^15.5.4",
+    "@types/react-hot-loader": "^3.0.4",
+    "d3": "^4.11.0",
+    "moment": "^2.19.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-hot-loader": "3.0.0-beta.7"
+  },
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.2.3",
+    "css-loader": "^0.28.7",
+    "html-webpack-plugin": "^2.30.1",
+    "style-loader": "^0.19.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "tslint": "^5.7.0",
+    "tslint-react": "^3.2.0",
+    "typescript": "^2.5.2",
+    "webpack": "^3.5.5",
+    "webpack-dev-server": "^2.7.1"
+  }
+}

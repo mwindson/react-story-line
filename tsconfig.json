@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "./build/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noStrictGenericChecks": true,
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "baseUrl": ".", // This must be specified if "paths" is.
+    "paths": {
+      "*": [
+        "*",
+        "app/*"
+      ]
+    }
+  },
+  "include": [
+    "./app/**/*"
+  ]
+}
