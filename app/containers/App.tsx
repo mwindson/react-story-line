@@ -1,5 +1,7 @@
-import * as d3 from 'd3'
+import d3 from 'd3'
 import * as React from 'react';
+import { Button, ButtonToolbar } from 'react-bootstrap'
+import Calender from '../compontents/Calender/Calender'
 import Clock from '../compontents/Clock'
 import '../style/App.styl'
 interface AppProps { compiler: string; framework: string; }
@@ -39,18 +41,19 @@ export default class App extends React.Component<{}, AppState> {
     this.setState({ currTimeIndex: Math.max(this.state.currTimeIndex - 1, 0) })
   }
   changeLayout = () => {
-    this.setState({ layout: this.state.layout === 'single' ? 'multi' : 'single' })
+    this.setState({ layout: this.state.layout === 'single' ? 'line' : 'single' })
   }
+
   render() {
     const { currTimeIndex, timeSeq, layout } = this.state
     return (
       <div className="story-line">
         <div className="buttons-part">
-          <button onClick={() => this.timeBack()}>上一个</button>
-          <button onClick={() => this.timeforward()}>下一个</button>
-          <button onClick={() => this.changeLayout()} style={{ marginLeft: 40 }}>{layout}</button>
+          <Button onClick={() => this.timeBack()}>上一个</Button>
+          <Button onClick={() => this.timeforward()}>下一个</Button>
+          <Button onClick={() => this.changeLayout()} style={{ marginLeft: 40 }}>{layout}</Button>
         </div>
-        {timeSeq && timeSeq.length !== 0 ? <Clock timeSeq={timeSeq} layout={layout} timeIndex={currTimeIndex} /> : null}
+        <Calender width={1600} height={900} layout={'spiral'} startAngle={0} year={2017} />
       </div >
     )
   }

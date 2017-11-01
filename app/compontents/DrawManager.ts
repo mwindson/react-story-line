@@ -137,7 +137,7 @@ export default class DrawManager {
       .selectAll('.activity')
       .data([this.timeSeq[index]])
       .transition()
-      .text((d) => `${d.time}>${d.content} `)
+      .text((d) => `${d.time} ${d.content} `)
     this.timeIndex = index
   }
 
@@ -155,7 +155,7 @@ export default class DrawManager {
     } else {
       this.svg.append('g').attr('class', 'time-line').append('path')
       for (let i = 0; i <= this.timeIndex; i++) {
-        this.drawClock(i, 'multi')
+        setTimeout(() => this.drawClock(i, 'multi'), 2000 * i)
       }
     }
   }
@@ -196,7 +196,7 @@ export default class DrawManager {
       .attr('text-anchor', 'middle')
       .attr('x', 0)
       .attr('y', this.radius + 30)
-      .text((d) => `${d.time}>${d.content} `)
+      .text((d) => `${d.time} ${d.content} `)
   }
 
   private drawStoryLine(
