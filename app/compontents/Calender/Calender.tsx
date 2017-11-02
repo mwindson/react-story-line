@@ -16,17 +16,15 @@ class Calender extends PureComponent<CalenderProps, {}> {
   }
 
   componentDidMount() {
-    const { layout, width, height } = this.props
-    this.calender = new CalenderSpiral(this.svg, width, height)
+    const { layout, width, height, year } = this.props
+    this.calender = new CalenderSpiral(this.svg, 900, 900, year)
     this.calender.draw()
   }
 
   render() {
     const { width, height } = this.props
     return (
-      <div className="svg-part">
-        <svg width={width} height={height} ref={(node) => this.svg = node} />
-      </div>
+      <svg width={width} height={height} ref={(node) => this.svg = node} viewBox={'0,0 900,900'} />
     )
   }
 }
