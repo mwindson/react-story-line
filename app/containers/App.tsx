@@ -2,7 +2,7 @@ import d3 from 'd3'
 import * as React from 'react';
 import { Button, ButtonToolbar, DropdownButton, MenuItem, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap'
 import Calender from '../compontents/Calender/Calender'
-import Clock from '../compontents/Clock'
+import Clock from '../compontents/Clock/Clock'
 import '../style/App.styl'
 interface AppProps { compiler: string; framework: string; }
 interface AppState { currTimeIndex: number, timeSeq: TimeSeq[], layout: string, dateLevel: 'year' | 'month' | 'day' } }
@@ -76,10 +76,12 @@ export default class App extends React.Component<{}, AppState> {
         <main>
           {dateLevel === 'day' ? <div className="buttons-part">
             <Button onClick={() => this.timeBack()} bsStyle="warning">上一个</Button>
-            <Button onClick={() => this.timeforward()}>下一个</Button>
+            <Button onClick={() => this.timeforward()} bsStyle="primary">下一个</Button>
             <Button onClick={() => this.changeLayout()} style={{ marginLeft: 40 }}>{layout}</Button>
           </div> : null}
-          <Calender width={900} height={900} layout={'spiral'} startAngle={0} year={2017} />
+          {dateLevel === 'day' ? <Clock layout={layout} timeIndex={currTimeIndex} timeSeq={timeSeq} /> : null}
+          {dateLevel === 'year' ? <Calender width={900} height={900} layout={'spiral'} startAngle={0} year={2017} />
+            : null}
         </main>
       </div >
     )

@@ -19,6 +19,7 @@ class Calender extends PureComponent<CalenderProps, {}> {
     const { layout, width, height, year } = this.props
     this.calender = new CalenderSpiral(this.svg, 900, 900, year)
     this.calender.draw()
+    // this.calender.exit()
   }
 
   render() {

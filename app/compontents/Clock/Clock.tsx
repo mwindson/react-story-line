@@ -1,6 +1,6 @@
 import * as React from 'react';
-import DrawManager from '../compontents/DrawManager'
-import '../style/Clock.styl'
+import '../../style/Clock.styl'
+import DrawManager from './DrawManager'
 
 export interface TimeSeq { time: string, content: string }
 interface ClockProps { timeSeq: TimeSeq[], layout: string, timeIndex: number }
