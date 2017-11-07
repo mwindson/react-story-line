@@ -1,0 +1,8 @@
+year:
+ - line
+month:
+ - spiral
+ - grid
+day:
+ - single
+ - line

@@ -14,11 +14,9 @@ html,body
 
 .story-line
   background #f9f9f9
-  .container
-    font-size 24px
-    
-    .navbar-brand
-      font-size 24px
+  .nav-bar
+    background black
+    color white
   main
     width 100%
     height 100%
@@ -26,6 +24,7 @@ html,body
     flex-direction column
     justify-content center
     align-items center
+    padding 20px
     > svg
       -webkit-user-select none
       -moz-user-select none
@@ -35,8 +34,9 @@ html,body
       height 40px
       display flex
 
-.dropdown-toggle,.navbar-right > li > a
+.dropdown-toggle
   border-bottom 3px solid #222
+  color #fafafa
   &:hover
     border-bottom 3px solid #cc7a6f
-    color #fafafa
+    color #cc7a6f

@@ -42,6 +42,10 @@ module.exports = {
         test: /\.styl$/,
         loaders: ['style-loader', 'css-loader', 'stylus-loader'],
       },
+      {
+        test: /\.ya?ml$/,
+        use: ['json-loader', 'yaml-loader'],
+      },
     ],
   },
 

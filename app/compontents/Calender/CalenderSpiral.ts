@@ -3,6 +3,7 @@ import * as moment from 'moment'
 
 interface Point { x: number, y: number }
 class CalenderSpiral {
+  func: (m: number) => void;
   f: number
   v: number
   svg: d3.Selection<SVGElement, {}, HTMLElement, null>
@@ -10,14 +11,15 @@ class CalenderSpiral {
   center: Point
   year: number
   totalAngle: number
-  constructor(svg: SVGSVGElement, width: number, height: number, year: number) {
+  constructor(svg: SVGSVGElement, year: number, changeToMonth: (m: number) => void) {
     this.svg = d3.select(svg)
-    this.radius = Math.min(width, height) / 2
-    this.center = { x: width / 2, y: height / 2 }
+    this.radius = 450
+    this.center = { x: 450, y: 450 }
     this.year = year
     this.totalAngle = 0
     this.v = 0.06
     this.f = this.radius / (21 * this.v)
+    this.func = changeToMonth
   }
 
   public draw() {
@@ -37,16 +39,23 @@ class CalenderSpiral {
     this.svg.select('.calender').select('.shape').selectAll('line').remove()
     const dates = this.svg.select('.calender').select('.dates').selectAll('g')
     const ang = this.totalAngle
+    const year = this.year
     const self = this
-    const tweenDash = function () {
+    const tweenDash = function (type: 'collapse' | 'expand') {
       const l = (spiral.node() as SVGPathElement).getTotalLength();
-      const i = d3.interpolateString(l + "," + l, "0," + l); // interpolation of stroke-dasharray style attr
+      const i = type === 'collapse' ?
+        d3.interpolateString("0," + l, l + "," + l) :
+        d3.interpolateString(l + "," + l, "0," + l)
+      // interpolation of stroke-dasharray style attr
       const marker = d3.select("#i0")
       const data = marker.datum() as Date
-      return function (t) {
+      return function (t: number) {
         dates.each(function (d: Date, index) {
-          if (t >= 1 / 377 * index) {
-            const a = d3.interpolateNumber(0, d.startAngle - 4 * Math.PI)
+          const total = isLeapYear(year) ? 378 : 377
+          if (t >= 1 / total * index) {
+            const a = type === 'expand' ?
+              d3.interpolateNumber(0, d.startAngle - 4 * Math.PI) :
+              d3.interpolateNumber(4 * Math.PI, 0)
             const ndata = { ...d }
             ndata.startAngle -= a(t)
             ndata.startRadius = calEndRadius(data.startAngle, data.startRadius, ndata.startAngle)
@@ -55,16 +64,18 @@ class CalenderSpiral {
             d3.select(this).select('text').remove()
             d3.select(this)
               .select('path').attr("d", self.generatePath(ndata, self.center, self.f, self.v)) // move marker
+            if (t >= 1 / total * (index + 1)) { d3.select(this).remove() }
           }
         })
         return i(t);
       }
     }
     spiral.transition()
-      .duration(7500)
-      .attrTween("stroke-dasharray", tweenDash)
+      .duration(1500)
+      .attrTween("stroke-dasharray", () => tweenDash('expand'))
       .on('end', function () {
-        dates.remove()
+        self.svg.selectAll('.calender').remove()
+        self.svg.select('text').remove()
       })
   }
 
@@ -89,39 +100,40 @@ class CalenderSpiral {
       a = a + Math.PI / f
       b = b + v
     }
-    const shape = calender.append('g').attr('class', 'shape')
-    shape.append('path').attr('d', spiral(spiralData)).attr('stroke', 'red').attr('fill', 'none')
     this.totalAngle = a
     const dates: Date[] = generateYearData(year, b, a, v, f)
-    shape.selectAll('line').data(dates).enter()
-      .append('line')
-      .attr('x1', (d) => center.x + d.startRadius * Math.sin(d.startAngle))
-      .attr('y1', (d) => center.y + d.startRadius * Math.cos(d.startAngle))
-      .attr('x2', (d) => center.x + (d.startRadius - 2 * f * v) * Math.sin(d.startAngle - 2 * Math.PI))
-      .attr('y2', (d) => center.y + (d.startRadius - 2 * f * v) * Math.cos(d.startAngle - 2 * Math.PI))
-      .attr('stroke', 'black')
-    shape
-      .append('line')
-      .datum(dates[dates.length - 1])
-      .attr('x1', (d) => center.x + d.endRadius * Math.sin(d.endAngle))
-      .attr('y1', (d) => center.y + d.endRadius * Math.cos(d.endAngle))
-      .attr('x2', (d) => center.x + (d.endRadius - 2 * f * v) * Math.sin(d.endAngle - 2 * Math.PI))
-      .attr('y2', (d) => center.y + (d.endRadius - 2 * f * v) * Math.cos(d.endAngle - 2 * Math.PI))
-      .attr('stroke', 'black')
-    // every date picker
+    // shape.selectAll('line').data(dates).enter()
+    //   .append('line')
+    //   .attr('x1', (d) => center.x + d.startRadius * Math.sin(d.startAngle))
+    //   .attr('y1', (d) => center.y + d.startRadius * Math.cos(d.startAngle))
+    //   .attr('x2', (d) => center.x + (d.startRadius - 2 * f * v) * Math.sin(d.startAngle - 2 * Math.PI))
+    //   .attr('y2', (d) => center.y + (d.startRadius - 2 * f * v) * Math.cos(d.startAngle - 2 * Math.PI))
+    //   .attr('stroke', 'black')
+    // shape
+    //   .append('line')
+    //   .datum(dates[dates.length - 1])
+    //   .attr('x1', (d) => center.x + d.endRadius * Math.sin(d.endAngle))
+    //   .attr('y1', (d) => center.y + d.endRadius * Math.cos(d.endAngle))
+    //   .attr('x2', (d) => center.x + (d.endRadius - 2 * f * v) * Math.sin(d.endAngle - 2 * Math.PI))
+    //   .attr('y2', (d) => center.y + (d.endRadius - 2 * f * v) * Math.cos(d.endAngle - 2 * Math.PI))
+    //   .attr('stroke', 'black')
 
+    // each date card
     const datesPart = calender.append('g').attr('class', 'dates')
     const datePart = datesPart.selectAll('g').data(dates).enter().append('g').attr('class', 'date')
       .attr('id', (d) => 'i' + d.index)
     datePart.append('path').attr('d', (d: Date) => this.generatePath(d, center, f, v))
-      .attr('fill', (d) => d.color)
+      .attr('fill', (d) => d.color).attr('stroke', 'rgba(150,150,150,.6)')
     // add date text
     datePart.append('text').text((d) => d.text)
       .attr('x', (d) => center.x + (d.startRadius - f * v) * Math.sin((d.startAngle + d.endAngle) / 2) - 12)
       .attr('y', (d) => center.y + 5 + (d.startRadius - f * v) * Math.cos((d.startAngle + d.endAngle) / 2))
+      // .attr('x', 0).attr('y', 0)
       .attr('fill', (d) => d.type === 'monthLabel' ? 'white' : 'black')
       .attr('font-size', 16)
     // outer border
+    const shape = calender.append('g').attr('class', 'shape')
+    shape.append('path').attr('d', spiral(spiralData)).attr('fill', 'none')
   }
   private addRotate(
     calender: d3.Selection<Element | d3.EnterElement | Document | Window, {}, HTMLElement, null>,
@@ -154,11 +166,12 @@ class CalenderSpiral {
   private dateInteract(
     calender: d3.Selection<Element | d3.EnterElement | Document | Window, {}, HTMLElement, null>) {
     const dates = calender.selectAll('.date').attr('cursor', 'pointer')
+    const self = this
     dates
       .filter((d: Date) => d.type === 'date')
       .on('mouseover', function () {
         const date = d3.select(this)
-        date.select('path').attr('fill', 'gray')
+        date.select('path').attr('fill', 'gray').attr('strobke', 'black')
         date.select('text').attr('fill', 'red')
         date.raise()
       })
@@ -167,7 +180,10 @@ class CalenderSpiral {
         date.select('path').attr('fill', (date.datum() as Date).color)
         date.select('text').attr('fill', 'black')
       })
-    const self = this
+      .on('click', function () {
+        const data = d3.select(this).datum() as Date
+        self.func(data.date.month())
+      })
     const dayCount = isLeapYear(self.year) ? 366 : 365
     const dayOfMonth = {
       JAN: 31, FEB: isLeapYear(self.year) ? 29 : 28, MAR: 31, APR: 30, MAY: 31, JUN: 30, JUL: 31,
@@ -191,7 +207,6 @@ class CalenderSpiral {
         calender.select('.month-border').remove()
       })
   }
-
   private generatePath(d: Date, center: Point, f: number, v: number): string {
     let path = `M${center.x + d.startRadius * Math.sin(d.startAngle)}
      ${center.y + d.startRadius * Math.cos(d.startAngle)} `
