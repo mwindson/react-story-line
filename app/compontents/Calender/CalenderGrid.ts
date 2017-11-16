@@ -22,11 +22,9 @@ class CalenderGrid {
         .attr('transform', `translate(${(i % 4) * 225},${Math.floor(i / 4) * 260 + 10}) scale(1)`)
       month
         .on('mouseover', function () {
-          d3.select(this).select('rect').attr('fill', 'rgba(200,200,200,0.5)')
           d3.select(this).attr('transform', `translate(${(i % 4) * 225},${Math.floor(i / 4) * 260}) scale(1)`)
         })
         .on('mouseout', function () {
-          d3.select(this).select('rect').attr('fill', 'rgba(255,255,255,.1)')
           d3.select(this).attr('transform', `translate(${(i % 4) * 225},${Math.floor(i / 4) * 260 + 10}) scale(1)`)
         })
     }
@@ -37,6 +35,7 @@ class CalenderGrid {
     const day = moment(`${this.year}-${month}-01`)
     const g = this.svg.append('g').attr('class', 'month' + month).attr('id', 'month')
     g.append('text').text(day.format('MMMM')).attr('text-anchor', 'middle')
+      .attr('fill', 'red')
       .attr('x', width * 3.5).attr('y', height / 2 + 4)
     const monthCard = g.append('g').attr('class', 'month-card')
     // add week label
@@ -44,7 +43,7 @@ class CalenderGrid {
     for (let i = 0; i < 7; i += 1) {
       monthCard.append('text').attr('text-anchor', 'middle')
         .attr('x', i * width + width / 2).attr('y', height * 1.5 + 4)
-        .text(weekLabel[i]).attr('fill', 'red')
+        .text(weekLabel[i]).attr('fill', 'green')
     }
     // add date of month
     const offset = day.day()
@@ -58,8 +57,9 @@ class CalenderGrid {
     }
     g.append('rect')
       .attr('x', 0).attr('y', 0)
-      .attr('width', 225).attr('height', 250)
-      .attr('fill', 'rgba(255,255,255,0.1)').attr('cursor', 'pointer')
+      .attr('width', 210).attr('height', 240)
+      .attr('fill', 'rgba(255,255,255,0)').attr('stroke', 'gray')
+      .attr('cursor', 'pointer')
   }
   exit() {
     for (let i = 0; i < 12; i += 1) {

@@ -3,22 +3,27 @@
     "outDir": "./build/",
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "es2015",
+    "module": "esnext",
     "moduleResolution": "node",
     "noStrictGenericChecks": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es5",
+    "target": "es2015",
     "jsx": "react",
     "allowJs": true,
-    "baseUrl": ".", // This must be specified if "paths" is.
+    "baseUrl": "app/", // This must be specified if "paths" is.
     "paths": {
       "*": [
-        "*",
-        "app/*"
+        "*"
       ]
     }
   },
   "include": [
     "./app/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib",
+    ".tmp",
+    "build"
   ]
 }

@@ -44,8 +44,8 @@ class CalenderSpiral {
     const tweenDash = function (type: 'collapse' | 'expand') {
       const l = (spiral.node() as SVGPathElement).getTotalLength();
       const i = type === 'collapse' ?
-        d3.interpolateString("0," + l, l + "," + l) :
-        d3.interpolateString(l + "," + l, "0," + l)
+        d3.interpolateString(l + "," + l, l + ",0") :
+        d3.interpolateString(l + ",0", l + "," + l)
       // interpolation of stroke-dasharray style attr
       const marker = d3.select("#i0")
       const data = marker.datum() as Date
@@ -55,7 +55,7 @@ class CalenderSpiral {
           if (t >= 1 / total * index) {
             const a = type === 'expand' ?
               d3.interpolateNumber(0, d.startAngle - 4 * Math.PI) :
-              d3.interpolateNumber(4 * Math.PI, 0)
+              d3.interpolateNumber(d.startAngle - 4 * Math.PI, 0)
             const ndata = { ...d }
             ndata.startAngle -= a(t)
             ndata.startRadius = calEndRadius(data.startAngle, data.startRadius, ndata.startAngle)
@@ -72,7 +72,7 @@ class CalenderSpiral {
     }
     spiral.transition()
       .duration(1500)
-      .attrTween("stroke-dasharray", () => tweenDash('expand'))
+      .attrTween("stroke-dasharray", () => tweenDash('collapse'))
       .on('end', function () {
         self.svg.selectAll('.calender').remove()
         self.svg.select('text').remove()
@@ -133,7 +133,7 @@ class CalenderSpiral {
       .attr('font-size', 16)
     // outer border
     const shape = calender.append('g').attr('class', 'shape')
-    shape.append('path').attr('d', spiral(spiralData)).attr('fill', 'none')
+    shape.append('path').attr('d', spiral(spiralData)).attr('fill', 'none').attr('stroke', 'red')
   }
   private addRotate(
     calender: d3.Selection<Element | d3.EnterElement | Document | Window, {}, HTMLElement, null>,
