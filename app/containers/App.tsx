@@ -1,13 +1,9 @@
-import 'bootstrap/dist/css/bootstrap.css'
 import d3 from 'd3'
 import * as React from 'react';
-import {
-  Button, DropdownItem, DropdownMenu, DropdownToggle,
-  Nav, Navbar, NavbarBrand, NavDropdown, NavItem, UncontrolledNavDropdown,
-} from 'reactstrap'
 import Calender from 'compontents/Calender/Calender'
 import Clock from 'compontents/Clock/Clock'
 import YearLine from 'compontents/Year/YearLine'
+import Tree from 'compontents/Tree/Tree'
 import 'style/App.styl'
 import * as menuConfig from 'utils/menu.yaml'
 
@@ -58,28 +54,28 @@ export default class App extends React.Component<{}, AppState> {
     const { currTimeIndex, timeSeq, layout, dateLevel } = this.state
     return (
       <div className="story-line">
-        <Navbar className="nav-bar" expand >
-          <NavbarBrand>react-story-line</NavbarBrand>
-          <Nav>
-            <UncontrolledNavDropdown>
-              <DropdownToggle nav caret>DateLevel</DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem onClick={() => this.changeLevel('year')}>year</DropdownItem>
-                <DropdownItem onClick={() => this.changeLevel('month')}>month</DropdownItem>
-                <DropdownItem onClick={() => this.changeLevel('day')}>day</DropdownItem>
-              </DropdownMenu>
-            </UncontrolledNavDropdown>
-            <UncontrolledNavDropdown>
-              <DropdownToggle nav caret>Layout</DropdownToggle>
-              <DropdownMenu>
+        <header className="nav-bar" >
+          <div>react-story-line</div>
+          <div>
+            <div>
+              <div>DateLevel</div>
+              <div>
+                <div onClick={() => this.changeLevel('year')}>year</div>
+                <div onClick={() => this.changeLevel('month')}>month</div>
+                <div onClick={() => this.changeLevel('day')}>day</div>
+              </div>
+            </div>
+            <div>
+              <div>Layout</div>
+              <div>
                 {menuConfig[dateLevel].map((l: string, i: number) =>
-                  (<DropdownItem key={i} onClick={() => this.changeLayout(l)}>{l}</DropdownItem>))}
-              </DropdownMenu>
-            </UncontrolledNavDropdown>
-          </Nav>
-        </Navbar>
+                  (<div key={i} onClick={() => this.changeLayout(l)}>{l}</div>))}
+              </div>
+            </div>
+          </div>
+        </header>
         <main>
-          {dateLevel === 'year' ? <YearLine data={timeSeq} /> : null}
+          {/* {dateLevel === 'year' ? <YearLine data={timeSeq} /> : null}
           {dateLevel === 'day' ? <Clock layout={layout} timeIndex={currTimeIndex} timeSeq={timeSeq} /> : null}
           {dateLevel === 'month' ?
             <Calender
@@ -87,7 +83,8 @@ export default class App extends React.Component<{}, AppState> {
               height={900}
               layout={layout}
               year={2017}
-            /> : null}
+            /> : null} */}
+            <Tree/>
         </main>
       </div >
     )

@@ -79,10 +79,7 @@ class CalenderSpiral {
       })
   }
 
-  /**
-   * 绘制螺旋线
-   *  X=(a+bs)cos(s), Y=(a+bs)sin(s)
-   */
+  // 绘制螺旋线: X=(a+bs)cos(s), Y=(a+bs)sin(s)
   private drawSpiral(
     calender: d3.Selection<Element | d3.EnterElement | Document | Window, {}, HTMLElement, null>,
     startAnlge: number, center: Point, radius: number, year: number) {
@@ -132,8 +129,8 @@ class CalenderSpiral {
       .attr('fill', (d) => d.type === 'monthLabel' ? 'white' : 'black')
       .attr('font-size', 16)
     // outer border
-    const shape = calender.append('g').attr('class', 'shape')
-    shape.append('path').attr('d', spiral(spiralData)).attr('fill', 'none').attr('stroke', 'red')
+    // const shape = calender.append('g').attr('class', 'shape')
+    // shape.append('path').attr('d', spiral(spiralData)).attr('fill', 'none').attr('stroke', 'red')
   }
   private addRotate(
     calender: d3.Selection<Element | d3.EnterElement | Document | Window, {}, HTMLElement, null>,
@@ -206,6 +203,15 @@ class CalenderSpiral {
       .on('mouseout', function () {
         calender.select('.month-border').remove()
       })
+      .on('click', function (data: Date) {
+        const otherMonth = dates.filter((d: Date) => d.month !== data.month)
+        console.log(otherMonth.attr('display'))
+        if (otherMonth.attr('display') === 'none') {
+          otherMonth.attr('display', 'auto')
+        } else {
+          otherMonth.attr('display', 'none')
+        }
+      })
   }
   private generatePath(d: Date, center: Point, f: number, v: number): string {
     let path = `M${center.x + d.startRadius * Math.sin(d.startAngle)}
@@ -238,7 +244,7 @@ class CalenderSpiral {
 interface Date {
   text: string, date?: moment.Moment, index: number, type: 'monthLabel' | 'date',
   color: string, startAngle: number, startRadius: number,
-  endAngle: number, endRadius: number,
+  endAngle: number, endRadius: number, month: number
 }
 /**
  * 根据年份返回一年中日期对应螺旋线上的位置坐标和角度
@@ -278,6 +284,7 @@ function generateYearData(year: number, radius: number, angle: number, v: number
         startRadius: prevEndRadius ? prevEndRadius : radius,
         text: monthName[day.month()],
         type: 'monthLabel',
+        month: day.month()
       }
       monthLabel.endRadius = calEndRadius(monthLabel.startAngle, monthLabel.startRadius, monthLabel.endAngle)
       dateArray.push(monthLabel)
@@ -295,6 +302,7 @@ function generateYearData(year: number, radius: number, angle: number, v: number
       startRadius: prevEndRadius,
       text: `${dayName[day.day()]}${day.date()} `,
       type: 'date',
+      month: day.month()
     }
     date.endRadius = calEndRadius(date.startAngle, date.startRadius, date.endAngle)
     dateArray.push(date)

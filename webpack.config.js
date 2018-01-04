@@ -63,6 +63,6 @@ module.exports = {
     contentBase: __dirname,
     host: '0.0.0.0',
     hot: true,
-    port: 8081
+    port: 8082
   }
 }
